@@ -22,4 +22,17 @@ make
 Output looks like
 ```
 
+...
+Supply:
+supply_node     inventory       satisfy_demand
+4               1200            3,
+3               400             2,3,
+2               300             2,
+1               200             1,3,
+0               200             1,3,
+
+...
+
 ```
+
+Still try to improve code, update anytime.
