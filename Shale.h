@@ -1,5 +1,5 @@
 //
-// Created by Chu, Tong on 9/8/23.
+// Created by linpingta.
 //
 
 #ifndef SHALE__SHALE_H_
@@ -10,6 +10,11 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <limits>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <iterator>
 
 // main class for shale algorithm
 // Shale Offline
@@ -34,6 +39,7 @@ class ShaleOffline {
   void updateAlpha(const std::string& j); // update alphaJ
   void findSigma(const std::string& j); // find sigmaJ
   void updateBeta(const std::string& i); // update betaI
+  std::vector<double> updateSigma(const std::string& j); // update sigmaJ
 
  private:
   AdSupply supply;

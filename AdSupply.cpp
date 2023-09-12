@@ -1,5 +1,5 @@
 //
-// Created by Chu, Tong on 9/8/23.
+// Created by linpingta.
 //
 
 #include "AdSupply.h"

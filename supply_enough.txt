@@ -1,0 +1,6 @@
+#supply_node     inventory
+0	200
+1	200
+2	300
+3	400
+4	1200

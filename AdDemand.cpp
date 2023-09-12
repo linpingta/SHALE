@@ -1,5 +1,5 @@
 //
-// Created by Chu, Tong on 9/8/23.
+// Created by linpingta.
 //
 
 #include "AdDemand.h"
@@ -72,9 +72,9 @@ void AdDemand::print(){
   std::cout << "\nDemand:" << std::endl;
   std::cout << "demand_node\tdemand\tpenalty\ttarget_supply" << std::endl;
   for (const auto& j : this->getDemandKeys()) {
-    std::cout <<  "demand: " << j << ", \t\t budget: " << this->getDemandBudget(j) << ", \t penalty: " << this->getPenalty(j) << "\t";
+    std::cout <<  "demand: " << j << ", \t budget: " << this->getDemandBudget(j) << ", \t penalty: " << this->getPenalty(j) << "\t";
     for (const auto& i : this->getTargetSupply(j)) {
-      std::cout << ", \t supply_ids: " << i << ",";
+      std::cout << " \t supply_id: " << i << ",";
     }
     std::cout << std::endl;
   }
