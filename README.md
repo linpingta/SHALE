@@ -21,18 +21,35 @@ make
 
 Output looks like
 ```
+Allocation:
+demand_node     demand          allocation
+1       400     400
+2       700     700
+3       1100    0
 
-...
-Supply:
-supply_node     inventory       satisfy_demand
-4               1200            3,
-3               400             2,3,
-2               300             2,
-1               200             1,3,
-0               200             1,3,
-
-...
-
+Remained:
+supply_node     inventory       remained
+0       200     0
+1       200     0
+2       300     0
+3       400     0
+4       1200    1200
 ```
 
-Still try to improve code, update anytime.
+You may change supply/demand from supply.txt/demand.txt to supply_enough.txt/demand_enough.txt, which same as HWM (thetaIJ) result.
+Output looks like
+```
+Allocation:
+demand_node     demand          allocation
+1       200     206
+2       300     291
+3       1000    999
+
+Remained:
+supply_node     inventory       remained
+0       200     0
+1       200     0
+2       300     176
+3       400     34
+4       1200    594
+```
