@@ -4,6 +4,20 @@
 
 #include "Shale.h"
 
+// compare key
+bool compareByKey(const std::pair<std::string, double>& a, const std::pair<std::string, double>& b) {
+  // Compare by value in descending order
+  if (a.second != b.second) {
+    return a.second > b.second;
+  }
+  // If values are equal, compare by key in ascending order
+  return a.first < b.first;
+}
+
+bool existsInVector(const std::string& str, const std::vector<std::string>& vec) {
+  return std::find(vec.begin(), vec.end(), str) != vec.end();
+}
+
 // max value
 // max(coef.1 - coef.2 * x) = y
 std::vector<double> mathMax(std::vector<std::tuple<double, double, double>>& coef, double y) {
@@ -57,6 +71,16 @@ void ShaleOffline::init() {
   }
 }
 
+std::vector<std::string> ShaleOffline::getDemandAllocationOrder() {
+  std::vector<std::pair<std::string, double>> keyValuePairs(this->thetaIJ.begin(), this->thetaIJ.end());
+  std::sort(keyValuePairs.begin(), keyValuePairs.end(), compareByKey);
+  std::vector<std::string> result;
+  for (const auto& pair : keyValuePairs) {
+    result.push_back(pair.first);
+  }
+  return result;
+}
+
 void ShaleOffline::stageOne(int iters) {
   while (iters > 0) {
     std::cout << "remaining iters round: " << iters << std::endl;
@@ -85,18 +109,19 @@ void ShaleOffline::stageTwo() {
   }
 
   std::unordered_map<std::string, double> sigma;
-  for (const auto& j : this->demand.getDemandKeys()) {
-    // update logic here
-    this->findSigma(j);
+  for (const auto& j : getDemandAllocationOrder()) {
+//  for (const auto& j : this->demand.getDemandKeys()) {
+      // update logic here
+      this->findSigma(j);
 
-    for (const auto& i : this->demand.getTargetSupply(j)) {
-      double g = std::max(0.0, this->thetaIJ[j] * (1.0 + (sigma[j] - this->betaI[i]) / this->demand.getV(j)));
-      this->sI[i] -= std::min(this->sI[i], this->supply.getSupply(i) * g);
-    }
+      for (const auto& i : this->demand.getTargetSupply(j)) {
+        double g = std::max(0.0, this->thetaIJ[j] * (1.0 + (sigma[j] - this->betaI[i]) / this->demand.getV(j)));
+        this->sI[i] -= std::min(this->sI[i], this->supply.getSupply(i) * g);
+      }
   }
 }
 
-void ShaleOffline::output() {
+void ShaleOffline::print() {
   std::cout << "<--- alpha --->" << std::endl;
   for (const auto& kv : this->alphaJ) {
     std::cout << "demand alpha: " << kv.first << " : " << kv.second << std::endl;
@@ -112,6 +137,10 @@ void ShaleOffline::output() {
   std::cout << "<--- sI --->" << std::endl;
   for (const auto& kv : this->sI) {
     std::cout << "supply sI: " << kv.first << " : " << kv.second << std::endl;
+  }
+  std::cout << "<--- thetaIJ --->" << std::endl;
+  for (const auto& kv : this->thetaIJ) {
+    std::cout << "demand thetaIJ: " << kv.first << " : " << kv.second << std::endl;
   }
 }
 
@@ -258,6 +287,22 @@ void ShaleOnline::init() {
   }
 }
 
+std::vector<std::string> ShaleOnline::getDemandAllocationOrderV2(const std::string& i) {
+  auto demandListMap = this->supply.getSatisfyDemandList();
+  auto demandListI = demandListMap[i];
+
+  std::vector<std::pair<std::string, double>> keyValuePairs(this->thetaIJ.begin(), this->thetaIJ.end());
+  std::sort(keyValuePairs.begin(), keyValuePairs.end(), compareByKey);
+
+  std::vector<std::string> result;
+  for (const auto& pair : keyValuePairs) {
+    if (existsInVector(pair.first, demandListI)) {
+      result.push_back(pair.first);
+    }
+  }
+  return result;
+}
+
 void ShaleOnline::allocation(const std::string& i) {
   double s = 1.0;
   std::unordered_map<std::string, double> xIJ;
@@ -265,8 +310,11 @@ void ShaleOnline::allocation(const std::string& i) {
     this->updateBeta(i);
   }
 
-  auto demandList = this->supply.getSatisfyDemandList();
-  for (const auto& j : demandList[i]) {
+//  auto demandList = this->supply.getSatisfyDemandList();
+//  for (const auto& j : demandList[i]) {
+
+  auto orderedDemandList = getDemandAllocationOrderV2(i);
+  for (const auto& j : orderedDemandList) {
 //    std::cout << "thetaIJ: " << this->thetaIJ[j] << std::endl;
     double g = std::max(0.0, this->thetaIJ[j] * (1.0 + (this->sigmaJ[j] - this->betaI[i]) / this->demand.getV(j)));
     xIJ[j] = std::min(s, g);

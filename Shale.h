@@ -25,7 +25,7 @@ class ShaleOffline {
   }
   void stageOne(int iters);
   void stageTwo();
-  void output();
+  void print();
 
   std::unordered_map<std::string, double> getAlphaJ() {
     return this->alphaJ;
@@ -40,6 +40,7 @@ class ShaleOffline {
   void findSigma(const std::string& j); // find sigmaJ
   void updateBeta(const std::string& i); // update betaI
   std::vector<double> updateSigma(const std::string& j); // update sigmaJ
+  std::vector<std::string> getDemandAllocationOrder(); // change demand order as allocation order
 
  private:
   AdSupply supply;
@@ -65,6 +66,7 @@ class ShaleOnline {
  private:
   void init();
   void updateBeta(const std::string& i); // update betaI
+  std::vector<std::string> getDemandAllocationOrderV2(const std::string& i); // change demand order as allocation order
 
  private:
   AdSupply& supply;

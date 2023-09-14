@@ -12,17 +12,19 @@
 
 int main() {
   AdSupply supply;
+//  supply.loadInventory("./supply_enough.txt");
   supply.loadInventory("./supply.txt");
 
   AdDemand demand;
   std::unordered_map<std::string, std::vector<std::string>> satisfyDemandList;
+//  demand.loadDemand("./demand_enough.txt", satisfyDemandList);
   demand.loadDemand("./demand.txt", satisfyDemandList);
+
   supply.setSatisfyDemandList(satisfyDemandList);
 
   ShaleOffline shaleOffline(supply, demand);
   shaleOffline.stageOne(5);
   shaleOffline.stageTwo();
-  shaleOffline.output();
 
   // fake the online logic
   std::unordered_map<std::string, double> alphaJ = shaleOffline.getAlphaJ();
@@ -36,6 +38,8 @@ int main() {
     }
   }
 
+  // print related information
+  shaleOffline.print();
   demand.print();
   supply.print();
   shaleOnline.print();
